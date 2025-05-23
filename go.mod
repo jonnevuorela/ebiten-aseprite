@@ -1,4 +1,4 @@
-module github.com/tducasse/ebiten-aseprite
+module github.com/jonnevuorela/ebiten-aseprite
 
 go 1.17
 
