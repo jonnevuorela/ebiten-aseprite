@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	"encoding/json"
+	"fmt"
 	"image"
 	"log"
 	"sort"
@@ -109,29 +110,29 @@ func (anim *Animation) GetTags(meta map[string]interface{}) {
 }
 
 func (anim *Animation) GetFrames(frames map[string]interface{}) {
-    frameMap := make(map[int]*Frame)
-    numbers := make([]int, 0, len(frames))
-    for k, val := range frames {
-        var num int
-        fmt.Sscanf(k, "player_siru %d.ase", &num)
-        frameItem := val.(map[string]interface{})
-        frame := frameItem["frame"].(map[string]interface{})
-        x := int(frame["x"].(float64))
-        y := int(frame["y"].(float64))
-        w := int(frame["w"].(float64))
-        h := int(frame["h"].(float64))
-        duration := frameItem["duration"].(float64)
-        frameMap[num] = &Frame{
-            Image:    anim.Image.SubImage(image.Rect(x, y, x+w, y+h)).(*ebiten.Image),
-            Duration: duration,
-        }
-        numbers = append(numbers, num)
-    }
-    sort.Ints(numbers)
-    anim.Frames = make([]*Frame, numbers[len(numbers)-1]+1)
-    for _, n := range numbers {
-        anim.Frames[n] = frameMap[n]
-    }
+	frameMap := make(map[int]*Frame)
+	numbers := make([]int, 0, len(frames))
+	for k, val := range frames {
+		var num int
+		fmt.Sscanf(k, "player_siru %d.ase", &num)
+		frameItem := val.(map[string]interface{})
+		frame := frameItem["frame"].(map[string]interface{})
+		x := int(frame["x"].(float64))
+		y := int(frame["y"].(float64))
+		w := int(frame["w"].(float64))
+		h := int(frame["h"].(float64))
+		duration := frameItem["duration"].(float64)
+		frameMap[num] = &Frame{
+			Image:    anim.Image.SubImage(image.Rect(x, y, x+w, y+h)).(*ebiten.Image),
+			Duration: duration,
+		}
+		numbers = append(numbers, num)
+	}
+	sort.Ints(numbers)
+	anim.Frames = make([]*Frame, numbers[len(numbers)-1]+1)
+	for _, n := range numbers {
+		anim.Frames[n] = frameMap[n]
+	}
 }
 
 func (anim *Animation) Update() {
